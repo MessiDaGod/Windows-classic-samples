@@ -805,7 +805,7 @@ int __cdecl main(int argc, char** argv)
                 printf("Minimum = %dms, Maximum = %dms, Average = %dms", min(time, time, time), max(time, time, time), time);
             }
         }
-        //Sleep(1000);
+        Sleep(1000);
     }
 
 CLEANUP:
