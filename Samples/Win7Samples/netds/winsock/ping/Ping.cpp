@@ -77,12 +77,22 @@ char* gDestination = "10.135.11.61",                // Destination
 recvbuf[MAX_RECV_BUF_LEN];        // For received packets
 int   recvbuflen = MAX_RECV_BUF_LEN;    // Length of received packets.
 
-//
-// Function: usage
-//
-// Description:
-//    Print usage information.
-//
+float totrec = 0, tottime = 0;
+
+double roundDouble(float var)
+{
+    // 37.66666 * 100 =3766.66
+    // 3766.66 + .5 =3767.16    for rounding off value
+    // then type cast to int so value is 3767
+    // then divided by 100 so the value converted into 37.67
+    float value = (int)(var * 100 + .5);
+    return (double)value / 100;
+}
+
+/// <summary>
+/// Print usage information
+/// </summary>
+/// <param name="progname"></param>
 void usage(char* progname)
 {
     printf("usage: %s [options] <host> \n", progname);
@@ -783,6 +793,8 @@ int __cdecl main(int argc, char** argv)
             if (time == 0)
                 printf(": bytes=%d time<1ms TTL=%d\n", gDataSize, gTtl);
             else
+                totrec += 1;
+                tottime += time;
                 printf(": bytes=%d time=%dms TTL=%d\n", gDataSize, time, gTtl);
 
             PrintPayload(recvbuf, bytes);
@@ -795,14 +807,14 @@ int __cdecl main(int argc, char** argv)
 
             if (i == DEFAULT_SEND_COUNT - 1)
             {
- 
+                float avgtime = tottime / totrec;
                 printf("Ping statistics for 10.135.11.61:\n");
                 printf("\tPackets: Sent = %d", DEFAULT_SEND_COUNT);
                 printf(", Received = %d", DEFAULT_SEND_COUNT - fails);
                 printf(", Loss = %d", fails);
-                printf(", (%d%d loss),\n", (fails / DEFAULT_SEND_COUNT) * 100, '%');
+                printf(", (%f%% loss),\n", (fails / DEFAULT_SEND_COUNT) * 100, '%');
                 printf("Approximate round trip times in milli-seconds:\n");
-                printf("Minimum = %dms, Maximum = %dms, Average = %dms", min(time, time, time), max(time, time, time), time);
+                printf("Minimum = %dms, Maximum = %dms, Average = %fms", min(time, time, time), max(time, time, time), roundDouble(avgtime));
             }
         }
         Sleep(1000);
@@ -828,5 +840,6 @@ CLEANUP:
 
 EXIT:
     std::string str;
-    std::getline(std::cin, str);
+    /*std::getline(std::cin, str);*/
+    return 0;
 }
