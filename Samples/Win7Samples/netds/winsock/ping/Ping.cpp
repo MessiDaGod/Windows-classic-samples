@@ -55,6 +55,8 @@
 #include <iostream>
 #include <iostream>
 #include <string>
+#include <functional>
+#include <algorithm>
 
 #define DEFAULT_DATA_SIZE      32       // default data size
 
@@ -79,15 +81,7 @@ int   recvbuflen = MAX_RECV_BUF_LEN;    // Length of received packets.
 
 float totrec = 0, tottime = 0;
 
-double roundDouble(float var)
-{
-    // 37.66666 * 100 =3766.66
-    // 3766.66 + .5 =3767.16    for rounding off value
-    // then type cast to int so value is 3767
-    // then divided by 100 so the value converted into 37.67
-    float value = (int)(var * 100 + .5);
-    return (double)value / 100;
-}
+int numberoftimes[DEFAULT_SEND_COUNT] = {}, n = 0;
 
 /// <summary>
 /// Print usage information
@@ -731,7 +725,7 @@ int __cdecl main(int argc, char** argv)
     fromlen = sizeof(from);
     PostRecvfrom(s, recvbuf, recvbuflen, (SOCKADDR*)&from, &fromlen, &recvol);
 
-    printf("Pinging ");
+    printf("\nPinging ");
     PrintAddress(dest->ai_addr, (int)dest->ai_addrlen);
     printf(" with %d bytes of data\n", gDataSize);
 
@@ -793,9 +787,10 @@ int __cdecl main(int argc, char** argv)
             if (time == 0)
                 printf(": bytes=%d time<1ms TTL=%d\n", gDataSize, gTtl);
             else
-                totrec += 1;
-                tottime += time;
-                printf(": bytes=%d time=%dms TTL=%d\n", gDataSize, time, gTtl);
+                numberoftimes[n] = time;
+            totrec += 1;
+            tottime += time;
+            printf(": bytes=%d time=%dms TTL=%d\n", gDataSize, time, gTtl);
 
             PrintPayload(recvbuf, bytes);
 
@@ -808,16 +803,21 @@ int __cdecl main(int argc, char** argv)
             if (i == DEFAULT_SEND_COUNT - 1)
             {
                 float avgtime = tottime / totrec;
+                float defsendcount = DEFAULT_SEND_COUNT;
+                float pctloss = (fails / defsendcount) * 100;
+                int max = *std::max_element(std::begin(numberoftimes), std::end(numberoftimes));
+                int min = *std::min_element(std::begin(numberoftimes), std::end(numberoftimes));
                 printf("Ping statistics for 10.135.11.61:\n");
                 printf("\tPackets: Sent = %d", DEFAULT_SEND_COUNT);
                 printf(", Received = %d", DEFAULT_SEND_COUNT - fails);
-                printf(", Loss = %d", fails);
-                printf(", (%f%% loss),\n", (fails / DEFAULT_SEND_COUNT) * 100, '%');
+                printf(", Loss = %.f", fails);
+                printf(", (%.2f%% loss),\n", pctloss, '%');
                 printf("Approximate round trip times in milli-seconds:\n");
-                printf("Minimum = %dms, Maximum = %dms, Average = %fms", min(time, time, time), max(time, time, time), roundDouble(avgtime));
+                printf("Minimum = %dms, Maximum = %dms, Average = %.2fms", min, max, avgtime);
             }
         }
         Sleep(1000);
+        n += 1;
     }
 
 CLEANUP:
