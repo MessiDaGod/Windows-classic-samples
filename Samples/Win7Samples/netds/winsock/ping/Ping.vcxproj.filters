@@ -37,6 +37,9 @@
     <Image Include="D:\repos\PingYardi\PingYardi\ping.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="ping.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Ping.rc">

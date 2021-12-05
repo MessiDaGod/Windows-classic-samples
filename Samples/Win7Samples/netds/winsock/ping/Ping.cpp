@@ -840,6 +840,6 @@ CLEANUP:
 
 EXIT:
     std::string str;
-    /*std::getline(std::cin, str);*/
+    std::getline(std::cin, str);
     return 0;
 }

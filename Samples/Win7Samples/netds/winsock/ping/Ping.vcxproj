@@ -14,15 +14,16 @@
     <ProjectGuid>{8EC81216-C0A3-45CC-A6DF-A97E19F268DF}</ProjectGuid>
     <RootNamespace>Ping</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -38,8 +39,8 @@
     <_ProjectFileVersion>16.0.31727.243</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>Debug\</OutDir>
-    <IntDir>Debug\</IntDir>
+    <OutDir>\</OutDir>
+    <IntDir>\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
@@ -69,6 +70,12 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PreBuildEvent>
+      <Command>cl.exe -o ping.exe ping.cpp resolve.cpp ws2_32.lib</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Custom Build</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -97,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="D:\repos\PingYardi\PingYardi\ping.ico" />
+    <Image Include="ping.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Ping.rc" />
